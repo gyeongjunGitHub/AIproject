@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>hello</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <style>
+        body {
+          margin: 0;
+        }
+
+        #main > div {
+          text-align: center;
+        }
+        a {
+          text-decoration: none;
+          font-weight: 600;
+          line-height: 1.5em;
+        }
+        a:hover {
+          color: red;
+        }
+    </style>
+</head>
+<body>
+<h1><a href="/">main page</a></h1><br>
+<h2><a href="/user/login">로그인</a></h2><br>
+<h2><a href="/user/logout">로그아웃</a></h2><br>
+<!--정치 경제 사회 IT-->
+<br><br>
+<div>
+    <table border="1px">
+        <tr>
+            <th><a href="/board?category=정치">정치 게시판</a></th>
+            <th><a href="/board?category=경제">경제 게시판</a></th>
+            <th><a href="/board?category=사회">사회 게시판</a></th>
+            <th><a href="/board?category=과학/IT">과학/IT 게시판</a></th>
+        </tr>
+    </table>
+</div><br><br>
+<div>
+    <div id="loadingBox">
+
+    </div>
+    <select id="category" name="category">
+        <option value="정치">정치</option>
+        <option value="경제">경제</option>
+        <option value="사회">사회</option>
+        <option value="과학/IT">과학/IT</option>
+    </select><br>
+    <textarea id="content" name="content" style="width : 1000px; height: 200px;" ></textarea><br>
+    <button id="submit">test 버튼</button>
+    <button id="checkBtn">확인</button>
+</div>
+</body>
+<script>
+    const category = document.getElementById('category');
+    const content = document.getElementById('content');
+    const submit = document.getElementById('submit');
+    const loadingBox = document.getElementById('loadingBox');
+    const checkBtn = document.getElementById('checkBtn');
+    checkBtn.style.display='none';
+
+    function Data(url, category, content){
+        this.url = url;
+        this.data = {
+            category : category,
+            content : content
+        };
+    }
+
+    function RequestParam(method, body){
+        this.method = method;
+        this.headers = { 'Content-Type' : 'application/json' };
+        this.body = JSON.stringify(body);
+    }
+
+    submit.addEventListener('click', function(){
+        category.style.display='none';
+        content.style.display='none';
+        submit.style.display='none';
+        loadingBox.innerHTML = `요약중........`;
+        const data = new Data('/sendtext', category.value, content.value);
+        const requestParam = new RequestParam('POST', data.data);
+
+        fetch(data.url, requestParam)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+
+          console.log(response);
+          return response.json();
+        })
+        .then((data) => {
+          console.log('POST 요청 성공:', data);
+          if(data.content == null){
+            alert('로그인 후 이용 가능합니다.');
+            location.href = '/user/login';
+          }
+          loadingBox.innerHTML=data.content;
+          checkBtn.style.display='block';
+          checkBtn.addEventListener('click', function(){
+              location.href = '/';
+          });
+        })
+        .catch((error) => {
+          console.error('에러 발생:', error);
+        });
+    });
+</script>
+</html>
