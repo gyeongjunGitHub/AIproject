@@ -10,6 +10,7 @@ import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "user")
 public class UserEntity {
     @Id

@@ -21,15 +21,27 @@ public class UserController {
     }
 
     @PostMapping("/loginProc")
-    public String loginProc(@ModelAttribute UserDTO userDTO, HttpServletRequest request){
+    public String loginProc(@ModelAttribute UserDTO userDTO, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
         int result = userService.loginProc(userDTO, request);
+        model.addAttribute("Id", session.getAttribute("Id"));
         return "main";
     }
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
         userService.logout(request);
+        return "main";
+    }
+
+    @GetMapping("/join")
+    public String goJoinForm(){
+        return "joinForm";
+    }
+
+    @PostMapping("/joinProc")
+    public String joinProc(@ModelAttribute UserDTO userDTO){
+        userService.joinProc(userDTO);
         return "main";
     }
 }

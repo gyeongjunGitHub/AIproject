@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -43,5 +44,14 @@ public class UserService {
         HttpSession session = request.getSession();
         System.out.println(session.getAttribute("Id") + " -> logout");
         session.removeAttribute("Id");
+    }
+
+    @Transactional
+    public void joinProc(UserDTO userDTO) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userDTO.getId());
+        userEntity.setPassword(userDTO.getPassword());
+        userEntity.setRole("ROLE_USER");
+        userRepository.join(userEntity);
     }
 }

@@ -16,4 +16,8 @@ public class UserRepository {
         UserEntity userEntity = em.find(UserEntity.class, Id);
         return Optional.ofNullable(userEntity);
     }
+
+    public void join(UserEntity userEntity) {
+        em.persist(userEntity);
+    }
 }

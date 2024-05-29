@@ -6,50 +6,109 @@
     <style>
         body {
           margin: 0;
-        }
 
-        #main > div {
-          text-align: center;
         }
         a {
+          color: black;
           text-decoration: none;
           font-weight: 600;
+          width: 200px;
           line-height: 1.5em;
+          display: inline-block;
         }
-        a:hover {
-          color: red;
+
+
+        .up {
+            display: flex;
+            align-items: center;
+            background-color: #d1d8e0;
+            font-size: 1rem;
+            text-align: justify;
+            height: 40px;
+
         }
+        .up_main{
+            text-align: center;
+        }
+        .up_not_main{
+            text-align: center;
+        }
+        .main_content{
+            background-color: #1ab28a;
+            margin: 20px;
+            display: inline-block;
+            height: 500px;
+            text-align: center;
+            border: 2px white;
+            border-radius: 1em;
+        }
+        button{
+          background:#049abc;
+          color:#fff;
+          border:none;
+          position:relative;
+          height:40px;
+          font-size:1em;
+          padding:0 1em;
+          cursor:pointer;
+          transition:800ms ease all;
+          outline:none;
+        }
+        button:hover{
+          background:#fff;
+          color:#1AAB8A;
+        }
+        button:before,button:after{
+          content:'';
+          position:absolute;
+          top:0;
+          right:0;
+          height:2px;
+          width:0;
+          background: #1AAB8A;
+          transition:400ms ease all;
+        }
+        button:after{
+          right:inherit;
+          top:inherit;
+          left:0;
+          bottom:0;
+        }
+        button:hover:before,button:hover:after{
+          width:100%;
+          transition:800ms ease all;
+        }
+
+
     </style>
 </head>
 <body>
-<h1><a href="/">main page</a></h1><br>
-<h2><a href="/user/login">로그인</a></h2><br>
-<h2><a href="/user/logout">로그아웃</a></h2><br>
-<!--정치 경제 사회 IT-->
-<br><br>
-<div>
-    <table border="1px">
-        <tr>
-            <th><a href="/board?category=정치">정치 게시판</a></th>
-            <th><a href="/board?category=경제">경제 게시판</a></th>
-            <th><a href="/board?category=사회">사회 게시판</a></th>
-            <th><a href="/board?category=과학/IT">과학/IT 게시판</a></th>
-        </tr>
-    </table>
-</div><br><br>
-<div>
-    <div id="loadingBox">
+<div class="up">
+    <a class="up_main" href="/">main page</a>
+    <a href="/board?category=정치">정치 게시판</a>
+    <a href="/board?category=경제">경제 게시판</a>
+    <a href="/board?category=사회">사회 게시판</a>
+    <a href="/board?category=과학/IT">과학/IT 게시판</a>
+    <a class="up_not_main" th:if="${Id == null}" href="/user/login">로그인</a>
+    <a class="up_not_main" th:if="${Id != null}" href="/user/logout">로그아웃</a>
+    <a class="up_not_main" th:if="${Id == null}" href="/user/join">회원가입</a>
+</div>
 
+<div class="main_content">
+    <h2>요약할 내용을 입력해주세요</h2><br>
+    <div id="loadingBox">
     </div>
-    <select id="category" name="category">
-        <option value="정치">정치</option>
-        <option value="경제">경제</option>
-        <option value="사회">사회</option>
-        <option value="과학/IT">과학/IT</option>
-    </select><br>
-    <textarea id="content" name="content" style="width : 1000px; height: 200px;" ></textarea><br>
-    <button id="submit">test 버튼</button>
-    <button id="checkBtn">확인</button>
+    <div>
+        <select id="category" name="category">
+            <option value="정치">정치</option>
+            <option value="경제">경제</option>
+            <option value="사회">사회</option>
+            <option value="과학/IT">과학/IT</option>
+        </select><br>
+        <textarea id="content" name="content" style="width : 800px; height: 300px;" ></textarea><br>
+        <button id="submit">요약</button>
+        <button id="checkBtn">확인</button>
+    </div>
 </div>
 </body>
 <script>
