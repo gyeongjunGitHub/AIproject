@@ -30,7 +30,7 @@
         <th>content</th>
     </tr>
     <tr th:each="list :${boardList}">
-        <td th:text="${list.board_Id}"></td>
+        <td><a th:href="@{/board/detail(board_Id=${list.board_Id})}" th:text="${list.board_Id}"></a></td>
         <td th:text="${list.content}"></td>
     </tr>
 </table>

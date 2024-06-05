@@ -2,7 +2,9 @@ package AIproject.AIproject.controller;
 
 import AIproject.AIproject.dto.BoardDTO;
 import AIproject.AIproject.dto.ValueDTO;
+import AIproject.AIproject.entity.CommentEntity;
 import AIproject.AIproject.service.BoardService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -76,6 +79,24 @@ public class BoardController {
     public String boardList(Model model, @RequestParam String category) {
         model.addAttribute("boardList", boardService.findByCategory(category));
         return "boardList";
+    }
+
+    @GetMapping("/board/detail")
+    public String boardDetail(@RequestParam(name = "board_Id")Long board_Id, Model model) throws JsonProcessingException {
+        BoardDTO result = boardService.getBoardDetail(board_Id);
+        List<CommentEntity> commentList1 = boardService.getCommentList1(String.valueOf(board_Id));
+        model.addAttribute("commentList1", commentList1);
+        model.addAttribute("result", result);
+        return "detail";
+    }
+
+    @PostMapping("/commentContent")
+    @ResponseBody
+    public ResponseEntity<List<CommentEntity>> commentSave(@RequestBody String value) throws JsonProcessingException {
+        boardService.saveComment(value);
+        List<CommentEntity> commentList = boardService.getCommentList(value);
+
+        return ResponseEntity.ok(commentList);
     }
 
 }

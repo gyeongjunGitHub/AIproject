@@ -1,5 +1,6 @@
 package AIproject.AIproject.repository;
 
+import AIproject.AIproject.dto.BoardDTO;
 import AIproject.AIproject.entity.BoardEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -24,5 +25,10 @@ public class JpaBoardRepository implements BoardRepository {
         return em.createQuery("select b from BoardEntity as b where b.category=:category", BoardEntity.class)
                 .setParameter("category", category)
                 .getResultList();
+    }
+
+    @Override
+    public BoardEntity findById(Long boardId) {
+        return em.find(BoardEntity.class, boardId);
     }
 }

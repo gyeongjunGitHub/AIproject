@@ -1,8 +1,13 @@
 package AIproject.AIproject.service;
 
 import AIproject.AIproject.dto.BoardDTO;
+import AIproject.AIproject.dto.CommentDTO;
 import AIproject.AIproject.entity.BoardEntity;
+import AIproject.AIproject.entity.CommentEntity;
 import AIproject.AIproject.repository.BoardRepository;
+import AIproject.AIproject.repository.CommentRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +21,7 @@ public class BoardService {
 
 
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public BoardDTO save(BoardDTO boardDTO) {
@@ -31,5 +37,32 @@ public class BoardService {
             result.add(boardDTO);
         }
         return result;
+    }
+
+    public BoardDTO getBoardDetail(Long boardId) {
+        BoardEntity byId = boardRepository.findById(boardId);
+        BoardDTO boardDTO = new BoardDTO(byId);
+        return boardDTO;
+    }
+
+    @Transactional
+    public void saveComment(String value) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        CommentDTO commentDTO = objectMapper.readValue(value, CommentDTO.class);
+        CommentEntity commentEntity = new CommentEntity();
+        commentEntity.setComment_content(commentDTO.getComment_content());
+        commentEntity.setBoard_Id(commentDTO.getBoard_Id());
+        commentRepository.saveComment(commentEntity);
+
+    }
+
+    public List<CommentEntity> getCommentList(String value) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        CommentDTO commentDTO = objectMapper.readValue(value, CommentDTO.class);
+        return commentRepository.findByBoardId(commentDTO.getBoard_Id());
+    }
+    public List<CommentEntity> getCommentList1(String board_Id) throws JsonProcessingException {
+
+        return commentRepository.findByBoardId(board_Id);
     }
 }
